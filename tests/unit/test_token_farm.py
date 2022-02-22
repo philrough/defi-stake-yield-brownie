@@ -1,5 +1,5 @@
 from brownie import network, exceptions
-from scripts.utils import LOCAL_BLOCKCHAIN_ENVIRONMENTS, get_account, get_contract
+from scripts.utils import LOCAL_BLOCKCHAIN_ENVIRONMENTS, get_account, get_contract, INITIAL_PRICE_FEED_VALUE
 from scripts.deploy import deploy_token_farm_and_dapp_token
 from web3 import Web3
 import pytest
@@ -57,4 +57,17 @@ def test_stake_tokens():
 
 
 def test_issue_tokens():
-    pass
+    # Arrange
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+        pytest.skip
+    account = get_account()  
+    token_farm, dapp_token = test_stake_tokens()
+    starting_balance = dapp_token.balanceOf(account.address)
+
+    # Act
+    token_farm.issueTokens({"from": account})
+
+    # Assert
+    ending_balance = dapp_token.balanceOf(account.address)
+    # assert dapp_token.balanceOf(account.address) == starting_balance + INITIAL_PRICE_FEED_VALUE
+    assert dapp_token.balanceOf(account.address) > starting_balance

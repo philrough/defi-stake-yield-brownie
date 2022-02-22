@@ -9,15 +9,19 @@ LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local" "mainnet-fork"]
 contract_to_mock = {"eth_usd_price_feed": MockV3Aggregator, "dai_usd_price_feed": MockV3Aggregator, "weth_token": MockWETH, "fau_token": MockFAU}
 
 def get_account(index=None, id=None):
-    if index:
-        return accounts[index]
-    if id:
-        return accounts.load(id)
+    
     if (
         network.show_active() in FORKED_LOCAL_ENVIRONMENTS or network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS
     ):
-        return accounts[0]
-    return accounts.add(config["wallets"]["from_key"])
+        if index:
+            return accounts[index]
+        if id:
+            return accounts.load(id)
+        else:
+            return accounts[0]
+    if index:
+        return accounts.add(config["wallets"]["from_key1"])
+    return accounts.add(config["wallets"]["from_key"])    
 
 def get_contract(contract_name):
     contract_type = contract_to_mock[contract_name]

@@ -21,3 +21,4 @@ networks:
     eth_usd_price_feed: '0x9326BFA02ADD2366b30bacB125260Af641031331'
 wallets:
   from_key: ${PRIVATE_KEY}
+  from_key1: ${PRIVATE_KEY1}
